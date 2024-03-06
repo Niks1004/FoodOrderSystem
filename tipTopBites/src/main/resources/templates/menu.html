@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="header :: header" />
+<link href="/css/styles.css" rel="stylesheet" />
+
+<body>
+	<div th:replace="header :: navbar" />
+
+	<div class="container">
+		<div class="row" >
+			<div class="col-xs-8">
+				<h2 class="section-headline">
+				
+					<h2 class="section-headline">  <i>MENU</i>
+					</h2>
+				</h2>
+			</div>
+			<div class="col-xs-4">
+				
+			</div>
+		</div>
+		<div class="row" style="margin-top: 60px;">
+		
+		<div class="col-xs-2">
+		<h3><label for="category">Category</label></h3>
+		<div class="list-group" id="category">
+		<a th:href="@{/menu(category='all')}" th:classappend="${activeAll}? 'active'" class="list-group-item">All</a>
+		<a th:href="@{/searchByCategory(category='Salad')}" th:classappend="${activeSalad}? 'active'" class="list-group-item">Salad</a>
+		<a th:href="@{/searchByCategory(category='Soup')}" th:classappend="${activeSoup}? 'active'" class="list-group-item">Soup</a>
+		<a th:href="@{/searchByCategory(category='Breakfast')}" th:classappend="${activeBreakfast}? 'active'" class="list-group-item">Breakfast</a>
+		<a th:href="@{/searchByCategory(category='Pizza')}" th:classappend="${activePizza}? 'active'" class="list-group-item">Pizza</a>
+		<a th:href="@{/searchByCategory(category='Pasta')}" th:classappend="${activePasta}? 'active'" class="list-group-item">Pasta</a>
+		
+				<a th:href="@{/searchByCategory(category='Desert')}" th:classappend="${activeDesert}? 'active'" class="list-group-item">Desert</a>
+		
+		
+		</div>
+		</div>
+		
+			<div class="col-xs-10">
+				<div th:if="${emptyList}">
+					<h5 style="font-style: italic;">Oops, no result is found. Try
+						something else or try again later.</h5>
+				</div>
+
+				<table border="0" id="foodList">
+					<thead>
+						<tr>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="food-item" data-th-each="food : ${foodList}">
+							<td>
+								<div th:if="${food != null}">
+									<div class="row">
+										<div class="col-xs-3">
+											<a th:href="@{/foodDetail?id=}+${food.id}"> <img
+												class="img-responsive menu-food"
+												th:src="#{adminPath}+@{/image/food/}+${food.id}+'.png'" /></a>
+										</div>
+										<div class="col-xs-9">
+											<a th:href="@{/foodDetail?id=}+${food.id}">
+												<h4 th:text="${food.foodName}"></h4>
+											</a> 
+											<h5>Type: <strong><span th:text="${food.type}"></span></strong></h5> 
+											<h5>Category: <strong>
+											<span
+												th:text="${#strings.capitalize(food.category)}"></span></strong></h5>  <span
+												style="font-size: x-large; color: #db3208;">&euro;<span
+												th:text="${#numbers.formatDecimal(food.price, 0 , 'COMMA', 2, 'POINT')}"></span></span>
+
+
+											<p th:utext="${#strings.abbreviate(food.description, 1600)}"></p>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+
+
+
+
+
+			</div>
+		</div>
+	</div>
+	<!-- end of container -->
+
+
+	<div th:replace="header :: body-bottom-scripts" />
+	<script>
+		$(document).ready(function() {
+			$('#foodList').DataTable({
+				"lengthMenu":[[5,10,15,20,-1],[5,10,15,20,"All"]],
+				"ordering":false,
+				stateSave:true
+			});
+			
+			$("#foodList").on('page.dt', function() {
+				$('html, body').animate({
+					scrollTop: $('#foodList').offset().top
+				}, 200);
+			});
+		});
+	</script>
+</body>
+</html>
